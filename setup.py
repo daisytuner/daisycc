@@ -7,7 +7,7 @@ with open("README.md", "r") as fp:
 
 setup(
     name="daisytuner-llvm",
-    version="0.1.0",
+    version="0.1.1",
     description="Daisytuner-llvm is a tool for lifting static-control-parts (Scop) to stateful dataflow multigraphs (SDFG).",
     long_description=long_description,
     long_description_content_type="text/markdown",
