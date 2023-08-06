@@ -9,7 +9,8 @@ on:
   workflow_call:
 
 jobs:
-  tests:
+
+  scop2sdfg:
     strategy:
       fail-fast: false
       matrix:
@@ -49,7 +50,34 @@ jobs:
       shell: bash -l {0}
       run: |
         pytest --cov=scop2sdfg --cov-report=xml tests/unit
-    - name: Upload coverage reports to Codecov
-      uses: codecov/codecov-action@v3
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  plugin:
+    needs: scop2sdfg
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest, macos-latest]
+        python-version: ["3.8", "3.9", "3.10"]
+    runs-on: ${{ matrix.platform }}
+    defaults:
+      run:
+        working-directory: ./plugin
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        auto-update-conda: true
+    - name: Install dependencies
+      shell: bash -l {0}
+      run: |
+        conda install -c conda-forge llvmdev=16.0.4 polly=16.0.4
+    - name: Build and install
+      shell: bash -l {0}
+      run: |      
+        mkdir -p build && cd build
+        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA ..
+        cmake --build .
+        cmake --install .
+        cd ../
