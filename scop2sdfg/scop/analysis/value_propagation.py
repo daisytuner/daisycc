@@ -1,5 +1,5 @@
-from daisytuner_llvm.scop.undefined_value import UndefinedValue
-from daisytuner_llvm.scop.symbols.constant import Constant
+from scop2sdfg.scop.undefined_value import UndefinedValue
+from scop2sdfg.scop.symbols.constant import Constant
 
 
 def value_propagation(scop):

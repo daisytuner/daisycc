@@ -1,6 +1,6 @@
 import dace
 
-from daisytuner_llvm.scop.types import TYPES
+from scop2sdfg.scop.types import TYPES
 
 
 def test_table():

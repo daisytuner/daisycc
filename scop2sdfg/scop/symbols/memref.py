@@ -4,8 +4,8 @@ import dace
 
 from typing import List, Set, Dict
 
-from daisytuner_llvm.scop.value import Value
-from daisytuner_llvm.scop.symbols.constant import Constant
+from scop2sdfg.scop.value import Value
+from scop2sdfg.scop.symbols.constant import Constant
 
 
 class Memref(Value):

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Set
 
-from daisytuner_llvm.scop.value import Value
-from daisytuner_llvm.scop.undefined_value import UndefinedValue
-from daisytuner_llvm.scop.symbols.constant import Constant
+from scop2sdfg.scop.value import Value
+from scop2sdfg.scop.undefined_value import UndefinedValue
+from scop2sdfg.scop.symbols.constant import Constant
 
 
 class Computation(Value):

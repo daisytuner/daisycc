@@ -1,6 +1,6 @@
 import dace
 
-from daisytuner_llvm.scop.symbols.memref import Memref
+from scop2sdfg.scop.symbols.memref import Memref
 
 
 def test_value():

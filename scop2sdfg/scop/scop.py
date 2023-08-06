@@ -6,16 +6,16 @@ import islpy as isl
 from typing import Dict
 from collections import OrderedDict
 
-from daisytuner_llvm.scop.ast import ASTBuilder
+from scop2sdfg.scop.ast import ASTBuilder
 
-from daisytuner_llvm.scop.computation.computation import Computation
-from daisytuner_llvm.scop.computation.access import Access
+from scop2sdfg.scop.computation.computation import Computation
+from scop2sdfg.scop.computation.access import Access
 
-from daisytuner_llvm.scop.symbols.parameter import Parameter
-from daisytuner_llvm.scop.symbols.memref import Memref
-from daisytuner_llvm.scop.symbols.loop import Loop
+from scop2sdfg.scop.symbols.parameter import Parameter
+from scop2sdfg.scop.symbols.memref import Memref
+from scop2sdfg.scop.symbols.loop import Loop
 
-from daisytuner_llvm.scop.analysis import (
+from scop2sdfg.scop.analysis import (
     value_propagation,
     undefined_access_to_indirection,
 )

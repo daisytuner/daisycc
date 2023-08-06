@@ -1,11 +1,11 @@
 import dace
 import islpy as isl
 
-from daisytuner_llvm.scop.undefined_value import UndefinedValue
-from daisytuner_llvm.scop.symbols.loop import Loop
-from daisytuner_llvm.scop.symbols.constant import Constant
-from daisytuner_llvm.scop.computation.access import Access
-from daisytuner_llvm.scop.symbols.memref import Memref
+from scop2sdfg.scop.undefined_value import UndefinedValue
+from scop2sdfg.scop.symbols.loop import Loop
+from scop2sdfg.scop.symbols.constant import Constant
+from scop2sdfg.scop.computation.access import Access
+from scop2sdfg.scop.symbols.memref import Memref
 
 
 def test_load():

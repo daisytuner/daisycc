@@ -1,6 +1,6 @@
 import dace
 
-from daisytuner_llvm.scop.value import Value
+from scop2sdfg.scop.value import Value
 
 
 def test_from_ctype():

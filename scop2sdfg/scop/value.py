@@ -6,7 +6,7 @@ import string
 
 from typing import Set
 
-from daisytuner_llvm.scop.types import TYPES
+from scop2sdfg.scop.types import TYPES
 
 
 class Value:

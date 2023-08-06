@@ -1,4 +1,4 @@
-from daisytuner_llvm.scop.symbols.parameter import Parameter
+from scop2sdfg.scop.symbols.parameter import Parameter
 
 
 def test_construct():

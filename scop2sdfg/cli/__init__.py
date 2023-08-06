@@ -8,8 +8,8 @@ from dace.transformation.auto.auto_optimize import make_transients_persistent
 
 from daisytuner.optimization import Optimization
 
-from daisytuner_llvm.scop.scop import Scop
-from daisytuner_llvm.codegen.generator import Generator
+from scop2sdfg.scop.scop import Scop
+from scop2sdfg.codegen.generator import Generator
 
 
 class CLI(object):

@@ -1,4 +1,4 @@
-from daisytuner_llvm.scop.undefined_value import UndefinedValue
+from scop2sdfg.scop.undefined_value import UndefinedValue
 
 
 def test_is_valid():

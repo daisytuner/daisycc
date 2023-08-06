@@ -11,11 +11,11 @@ from sympy.parsing.sympy_parser import (
     implicit_multiplication_application,
 )
 
-from daisytuner_llvm.scop.value import Value
-from daisytuner_llvm.scop.undefined_value import UndefinedValue
-from daisytuner_llvm.scop.symbols.constant import Constant
-from daisytuner_llvm.scop.symbols.loop import Loop
-from daisytuner_llvm.scop.symbols.memref import Memref
+from scop2sdfg.scop.value import Value
+from scop2sdfg.scop.undefined_value import UndefinedValue
+from scop2sdfg.scop.symbols.constant import Constant
+from scop2sdfg.scop.symbols.loop import Loop
+from scop2sdfg.scop.symbols.memref import Memref
 
 
 class Access(Value):

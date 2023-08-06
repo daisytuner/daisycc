@@ -1,4 +1,4 @@
-from daisytuner_llvm.scop.symbols.loop import Loop
+from scop2sdfg.scop.symbols.loop import Loop
 
 
 def test_construct():

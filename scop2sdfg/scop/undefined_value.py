@@ -1,6 +1,6 @@
 from typing import Set
 
-from daisytuner_llvm.scop.value import Value
+from scop2sdfg.scop.value import Value
 
 
 class UndefinedValue(Value):

@@ -1,8 +1,8 @@
 import dace
 
-from daisytuner_llvm.scop.undefined_value import UndefinedValue
-from daisytuner_llvm.scop.symbols.constant import Constant
-from daisytuner_llvm.scop.computation.indirection import Indirection
+from scop2sdfg.scop.undefined_value import UndefinedValue
+from scop2sdfg.scop.symbols.constant import Constant
+from scop2sdfg.scop.computation.indirection import Indirection
 
 
 def test_load_1d():

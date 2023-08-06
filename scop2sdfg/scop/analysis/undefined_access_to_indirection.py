@@ -1,10 +1,10 @@
 from typing import Dict
 
-from daisytuner_llvm.scop.computation.access import Access
-from daisytuner_llvm.scop.computation.indirection import Indirection
-from daisytuner_llvm.scop.symbols.constant import Constant
-from daisytuner_llvm.scop.value import Value
-from daisytuner_llvm.scop.undefined_value import UndefinedValue
+from scop2sdfg.scop.computation.access import Access
+from scop2sdfg.scop.computation.indirection import Indirection
+from scop2sdfg.scop.symbols.constant import Constant
+from scop2sdfg.scop.value import Value
+from scop2sdfg.scop.undefined_value import UndefinedValue
 
 
 def undefined_access_to_indirection(scop, geps: Dict) -> Dict:

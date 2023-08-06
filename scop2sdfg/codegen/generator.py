@@ -15,13 +15,13 @@ from daisytuner.optimization.canonicalization import (
     GreedyLoopFusion,
 )
 
-from daisytuner_llvm.scop.scop import Scop
-from daisytuner_llvm.scop.value import Value
-from daisytuner_llvm.scop.computation.access import Access
-from daisytuner_llvm.scop.computation.indirection import Indirection
+from scop2sdfg.scop.scop import Scop
+from scop2sdfg.scop.value import Value
+from scop2sdfg.scop.computation.access import Access
+from scop2sdfg.scop.computation.indirection import Indirection
 
-from daisytuner_llvm.codegen.analysis import infer_shape
-from daisytuner_llvm.codegen.isl import (
+from scop2sdfg.codegen.analysis import infer_shape
+from scop2sdfg.codegen.isl import (
     to_sympy,
     sympy_to_pystr,
     extract_end_cond,

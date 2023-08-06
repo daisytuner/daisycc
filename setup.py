@@ -6,9 +6,9 @@ with open("README.md", "r") as fp:
     long_description = fp.read()
 
 setup(
-    name="daisytuner-llvm",
-    version="0.1.2",
-    description="Daisytuner-llvm is a tool for lifting static-control-parts (Scop) to stateful dataflow multigraphs (SDFG).",
+    name="scop2sdfg",
+    version="0.0.1",
+    description="scop2sdfg is a tool for lifting static-control-parts (Scop) to stateful dataflow multigraphs (SDFG).",
     long_description=long_description,
     long_description_content_type="text/markdown",
     author="Lukas Truemper",
@@ -25,7 +25,7 @@ setup(
     extras_require={"dev": ["black==22.10.0", "pytest>=7.2.0", "pytest-cov>=4.1.0"]},
     entry_points={
         "console_scripts": [
-            "scop2sdfg = daisytuner_llvm.cli:main",
+            "scop2sdfg = scop2sdfg.cli:main",
         ]
     },
 )

@@ -1,4 +1,4 @@
-from daisytuner_llvm.scop.symbols.constant import Constant
+from scop2sdfg.scop.symbols.constant import Constant
 
 
 def test_floating_point():
