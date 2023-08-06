@@ -109,3 +109,59 @@ jobs:
       shell: bash -l {0}
       run: |
         black --check --verbose driver/
+
+  integration-tests:
+    needs: driver
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ubuntu-latest]
+        python-version: ["3.8", "3.9", "3.10"]
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install system packages
+      shell: bash -l {0}
+      run: |
+        sudo apt install libopenblas-dev liblapack-dev libopenmpi-dev libpnetcdf-dev ncview
+    - uses: conda-incubator/setup-miniconda@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+        auto-update-conda: true
+    - name: Install conda packages
+      shell: bash -l {0}
+      run: |
+        conda install -c intel mkl-devel
+        conda install -c conda-forge llvmdev=16.0.4 clangdev=16.0.4 polly=16.0.4
+    - name: Install scop2sdfg
+      shell: bash -l {0}
+      run: |      
+        cd scop2sdfg
+        pip install .[dev]
+        cd ..
+
+        pip uninstall -y dace
+        pip install git+https://github.com/spcl/dace.git@users/lukas/wcr_conversion
+
+        pip uninstall -y daisytuner
+        pip install git+https://github.com/daisytuner/daisytuner.git@users/lukas/optimization
+    - name: Install DaisyLLVMPlugin
+      shell: bash -l {0}
+      run: |
+        cd plugin/    
+        mkdir -p build && cd build
+        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA ..
+        cmake --build .
+        cmake --install .
+        cd ../../
+    - name: Install driver
+      shell: bash -l {0}
+      run: |      
+        cd driver/
+        pip install .[dev]
+        cd ..
+    - name: Run integration tests
+      shell: bash -l {0}
+      run: |
+        CONDA_PREFIX=$CONDA pytest tests/

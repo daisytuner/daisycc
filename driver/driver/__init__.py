@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import List
 
 CONDA_PREFIX = os.environ["CONDA_PREFIX"]
-LIB_DAISY = Path(CONDA_PREFIX) / "lib" / "libDaisytunerLLVMPlugin.so"
+LIB_DAISY = Path(CONDA_PREFIX) / "lib" / "libDaisyLLVMPlugin.so"
 
 import dace
 import inspect
