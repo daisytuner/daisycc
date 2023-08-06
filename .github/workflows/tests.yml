@@ -40,7 +40,7 @@ jobs:
     - name: Lint with black
       shell: bash -l {0}
       run: |
-        black --check --verbose daisytuner_llvm/
+        black --check --verbose scop2sdfg/
         black --check --verbose tests/
     - name: Unit tests with pytest
       shell: bash -l {0}
