@@ -16,13 +16,12 @@ jobs:
         platform: [ubuntu-latest, macos-latest]
         python-version: ["3.8", "3.9", "3.10"]
     runs-on: ${{ matrix.platform }}
+    defaults:
+      run:
+        working-directory: ./scop2sdfg
 
     steps:
     - uses: actions/checkout@v3
-    - name: Checkout submodule
-      shell: bash -l {0}
-      run: |
-        cd scop2sdfg/
     - uses: conda-incubator/setup-miniconda@v2
       with:
         python-version: ${{ matrix.python-version }}
