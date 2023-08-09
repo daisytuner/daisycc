@@ -40,7 +40,7 @@ jobs:
         pip install git+https://github.com/spcl/dace.git@users/lukas/wcr_conversion
 
         pip uninstall -y daisytuner
-        pip install git+https://github.com/daisytuner/daisytuner.git@users/lukas/optimization
+        pip install git+https://github.com/daisytuner/daisytuner.git
     - name: Lint with black
       shell: bash -l {0}
       run: |
@@ -145,7 +145,7 @@ jobs:
         pip install git+https://github.com/spcl/dace.git@users/lukas/wcr_conversion
 
         pip uninstall -y daisytuner
-        pip install git+https://github.com/daisytuner/daisytuner.git@users/lukas/optimization
+        pip install git+https://github.com/daisytuner/daisytuner.git
     - name: Install DaisyLLVMPlugin
       shell: bash -l {0}
       run: |
