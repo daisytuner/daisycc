@@ -30,7 +30,7 @@ jobs:
     - name: Install conda packages
       shell: bash -l {0}
       run: |
-        conda install -c intel mkl-devel
+        conda install -c anaconda mkl mkl-include
     - name: Install
       shell: bash -l {0}
       run: |      
@@ -40,7 +40,7 @@ jobs:
         pip install git+https://github.com/spcl/dace.git@users/lukas/wcr_conversion
 
         pip uninstall -y daisytuner
-        pip install git+https://github.com/daisytuner/daisytuner.git@users/lukas/optimization
+        pip install git+https://github.com/daisytuner/daisytuner.git
     - name: Lint with black
       shell: bash -l {0}
       run: |
@@ -132,7 +132,7 @@ jobs:
     - name: Install conda packages
       shell: bash -l {0}
       run: |
-        conda install -c intel mkl-devel
+        conda install -c anaconda mkl mkl-include
         conda install -c conda-forge llvmdev=16.0.4 clangdev=16.0.4 polly=16.0.4
     - name: Install scop2sdfg
       shell: bash -l {0}
@@ -145,7 +145,7 @@ jobs:
         pip install git+https://github.com/spcl/dace.git@users/lukas/wcr_conversion
 
         pip uninstall -y daisytuner
-        pip install git+https://github.com/daisytuner/daisytuner.git@users/lukas/optimization
+        pip install git+https://github.com/daisytuner/daisytuner.git
     - name: Install DaisyLLVMPlugin
       shell: bash -l {0}
       run: |
