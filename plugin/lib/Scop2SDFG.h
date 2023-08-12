@@ -16,6 +16,25 @@
 
 #include "JScop.h"
 
+enum ScheduleChoice {
+  SCHEDULE_SEQUENTIAL,
+  SCHEDULE_MULTICORE,
+  SCHEDULE_GPU,
+};
+
+ScheduleChoice DaisySchedule;
+static llvm::cl::opt<ScheduleChoice, true> XSchedule(
+    "daisy-schedule",
+    llvm::cl::desc("Schedule choice"),
+    llvm::cl::values(
+        clEnumValN(SCHEDULE_SEQUENTIAL, "sequential", "Sequential execution"),
+        clEnumValN(SCHEDULE_MULTICORE, "multicore", "Multicore execution"),
+        clEnumValN(SCHEDULE_GPU, "gpu", "GPU execution")
+    ),
+    llvm::cl::location(DaisySchedule),
+    llvm::cl::init(SCHEDULE_SEQUENTIAL)
+);
+
 static bool DaisyTransferTune;
 static llvm::cl::opt<bool, true> XTransferTune(
     "daisy-transfer-tune",
@@ -41,6 +60,14 @@ private:
         command += " --scop='";
         command += jscop_str;
         command += "'";
+        if (DaisySchedule == SCHEDULE_SEQUENTIAL) {
+            command += " --schedule=sequential";
+        } else if (DaisySchedule == SCHEDULE_MULTICORE) {
+            command += " --schedule=multicore";        
+        } else if (DaisySchedule == SCHEDULE_GPU) {
+            command += " --schedule=gpu";
+        }
+
         if (DaisyTransferTune) {
             command += " --transfer_tune";
         }

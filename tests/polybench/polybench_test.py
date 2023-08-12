@@ -48,7 +48,7 @@ def lift_sdfg(
 ) -> None:
     cmd = [
         "daisycc",
-        "-O2",
+        "-fschedule=sequential",
         "-fno-unroll-loops",
         "-DPOLYBENCH_TIME",
         "-DPOLYBENCH_DUMP_ARRAYS",
@@ -146,7 +146,7 @@ def test_2mm(size, dtype):
     benchmark_path = Path(__file__).parent / "2mm"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -167,9 +167,9 @@ def test_2mm(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -214,7 +214,7 @@ def test_3mm(size, dtype):
     benchmark_path = Path(__file__).parent / "3mm"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -235,9 +235,9 @@ def test_3mm(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -282,7 +282,7 @@ def test_adi(size, dtype):
     benchmark_path = Path(__file__).parent / "adi"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -303,9 +303,9 @@ def test_adi(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -350,7 +350,7 @@ def test_atax(size, dtype):
     benchmark_path = Path(__file__).parent / "atax"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -371,9 +371,9 @@ def test_atax(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -418,7 +418,7 @@ def test_bicg(size, dtype):
     benchmark_path = Path(__file__).parent / "bicg"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -439,9 +439,9 @@ def test_bicg(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -486,7 +486,7 @@ def test_cholesky(size, dtype):
     benchmark_path = Path(__file__).parent / "cholesky"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -507,9 +507,9 @@ def test_cholesky(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -554,7 +554,7 @@ def test_correlation(size, dtype):
     benchmark_path = Path(__file__).parent / "correlation"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -575,9 +575,9 @@ def test_correlation(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -622,7 +622,7 @@ def test_correlation(size, dtype):
 #     benchmark_path = Path(__file__).parent / "covariance"
 #     source_path = benchmark_path / f"{benchmark_path.name}.c"
 #     out_path = benchmark_path / f"{benchmark_path.name}.out"
-#     out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+#     out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
 #     # Build reference
 #     compile_benchmark(source_path, out_path, size, dtype, fast_math=False)
@@ -643,9 +643,9 @@ def test_correlation(size, dtype):
 #         start = None
 #         stop = None
 #         for i, line in enumerate(lines):
-#             if "@polybench_timer_start()" in line:
+#             if "tail call void (...) @polybench_timer_start()" in line:
 #                 start = i
-#             elif "@polybench_timer_stop()" in line:
+#             elif "tail call void (...) @polybench_timer_stop()" in line:
 #                 assert start is not None
 #                 stop = i
 #                 break
@@ -690,7 +690,7 @@ def test_correlation(size, dtype):
 #     benchmark_path = Path(__file__).parent / "deriche"
 #     source_path = benchmark_path / f"{benchmark_path.name}.c"
 #     out_path = benchmark_path / f"{benchmark_path.name}.out"
-#     out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+#     out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
 #     # Build reference
 #     compile_benchmark(source_path, out_path, size, dtype)
@@ -711,9 +711,9 @@ def test_correlation(size, dtype):
 #         start = None
 #         stop = None
 #         for i, line in enumerate(lines):
-#             if "@polybench_timer_start()" in line:
+#             if "tail call void (...) @polybench_timer_start()" in line:
 #                 start = i
-#             elif "@polybench_timer_stop()" in line:
+#             elif "tail call void (...) @polybench_timer_stop()" in line:
 #                 assert start is not None
 #                 stop = i
 #                 break
@@ -758,7 +758,7 @@ def test_doitgen(size, dtype):
     benchmark_path = Path(__file__).parent / "doitgen"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype, fast_math=False)
@@ -779,9 +779,9 @@ def test_doitgen(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -826,7 +826,7 @@ def test_doitgen(size, dtype):
 #     benchmark_path = Path(__file__).parent / "durbin"
 #     source_path = benchmark_path / f"{benchmark_path.name}.c"
 #     out_path = benchmark_path / f"{benchmark_path.name}.out"
-#     out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+#     out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
 #     # Build reference
 #     compile_benchmark(source_path, out_path, size, dtype)
@@ -847,9 +847,9 @@ def test_doitgen(size, dtype):
 #         start = None
 #         stop = None
 #         for i, line in enumerate(lines):
-#             if "@polybench_timer_start()" in line:
+#             if "tail call void (...) @polybench_timer_start()" in line:
 #                 start = i
-#             elif "@polybench_timer_stop()" in line:
+#             elif "tail call void (...) @polybench_timer_stop()" in line:
 #                 assert start is not None
 #                 stop = i
 #                 break
@@ -894,7 +894,7 @@ def test_fdtd_2d(size, dtype):
     benchmark_path = Path(__file__).parent / "fdtd-2d"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype, fast_math=False)
@@ -915,9 +915,9 @@ def test_fdtd_2d(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -962,7 +962,7 @@ def test_floyd_warshall(size, dtype):
     benchmark_path = Path(__file__).parent / "floyd-warshall"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -983,9 +983,9 @@ def test_floyd_warshall(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -1030,7 +1030,7 @@ def test_gemm(size, dtype):
     benchmark_path = Path(__file__).parent / "gemm"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -1051,9 +1051,9 @@ def test_gemm(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -1098,7 +1098,7 @@ def test_gemver(size, dtype):
     benchmark_path = Path(__file__).parent / "gemver"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -1119,9 +1119,9 @@ def test_gemver(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -1166,7 +1166,7 @@ def test_gesummv(size, dtype):
     benchmark_path = Path(__file__).parent / "gesummv"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype, fast_math=False)
@@ -1187,9 +1187,9 @@ def test_gesummv(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -1234,7 +1234,7 @@ def test_gramschmidt(size, dtype):
     benchmark_path = Path(__file__).parent / "gramschmidt"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -1255,9 +1255,9 @@ def test_gramschmidt(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -1302,7 +1302,7 @@ def test_heat_3d(size, dtype):
     benchmark_path = Path(__file__).parent / "heat-3d"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -1323,9 +1323,9 @@ def test_heat_3d(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -1368,7 +1368,7 @@ def test_jacobi_1d(size, dtype):
     benchmark_path = Path(__file__).parent / "jacobi-1d"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -1389,9 +1389,9 @@ def test_jacobi_1d(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -1436,7 +1436,7 @@ def test_jacobi_2d(size, dtype):
     benchmark_path = Path(__file__).parent / "jacobi-2d"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -1457,9 +1457,9 @@ def test_jacobi_2d(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -1504,7 +1504,7 @@ def test_lu(size, dtype):
     benchmark_path = Path(__file__).parent / "lu"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -1525,9 +1525,9 @@ def test_lu(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -1572,7 +1572,7 @@ def test_ludcmp(size, dtype):
     benchmark_path = Path(__file__).parent / "ludcmp"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype, fast_math=False)
@@ -1593,9 +1593,9 @@ def test_ludcmp(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -1640,7 +1640,7 @@ def test_matmul(size, dtype):
     benchmark_path = Path(__file__).parent / "matmul"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype, fast_math=False)
@@ -1661,9 +1661,9 @@ def test_matmul(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -1708,7 +1708,7 @@ def test_min_plus_mm(size, dtype):
     benchmark_path = Path(__file__).parent / "min_plus_mm"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -1729,9 +1729,9 @@ def test_min_plus_mm(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -1776,7 +1776,7 @@ def test_mvt(size, dtype):
     benchmark_path = Path(__file__).parent / "mvt"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype, fast_math=False)
@@ -1797,9 +1797,9 @@ def test_mvt(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -1844,7 +1844,7 @@ def test_mxv(size, dtype):
     benchmark_path = Path(__file__).parent / "mxv"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -1865,9 +1865,9 @@ def test_mxv(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -1912,7 +1912,7 @@ def test_nussinov(size, dtype):
     benchmark_path = Path(__file__).parent / "nussinov"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -1933,9 +1933,9 @@ def test_nussinov(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -1980,7 +1980,7 @@ def test_relu(size, dtype):
     benchmark_path = Path(__file__).parent / "relu"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -2001,9 +2001,9 @@ def test_relu(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -2048,7 +2048,7 @@ def test_seidel_2d(size, dtype):
     benchmark_path = Path(__file__).parent / "seidel-2d"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -2069,9 +2069,9 @@ def test_seidel_2d(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -2116,7 +2116,7 @@ def test_sigmoid(size, dtype):
     benchmark_path = Path(__file__).parent / "sigmoid"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -2137,9 +2137,9 @@ def test_sigmoid(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -2184,7 +2184,7 @@ def test_softmax(size, dtype):
     benchmark_path = Path(__file__).parent / "softmax"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -2205,9 +2205,9 @@ def test_softmax(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -2252,7 +2252,7 @@ def test_symm(size, dtype):
     benchmark_path = Path(__file__).parent / "symm"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype, fast_math=False)
@@ -2273,9 +2273,9 @@ def test_symm(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -2320,7 +2320,7 @@ def test_syr2k(size, dtype):
     benchmark_path = Path(__file__).parent / "syr2k"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -2341,9 +2341,9 @@ def test_syr2k(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -2388,7 +2388,7 @@ def test_syrk(size, dtype):
     benchmark_path = Path(__file__).parent / "syrk"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -2409,9 +2409,9 @@ def test_syrk(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -2456,7 +2456,7 @@ def test_trisolv(size, dtype):
     benchmark_path = Path(__file__).parent / "trisolv"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -2477,9 +2477,9 @@ def test_trisolv(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
@@ -2524,7 +2524,7 @@ def test_trmm(size, dtype):
     benchmark_path = Path(__file__).parent / "trmm"
     source_path = benchmark_path / f"{benchmark_path.name}.c"
     out_path = benchmark_path / f"{benchmark_path.name}.out"
-    out_opt_path = benchmark_path / f"{benchmark_path.name}_dace.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
     # Build reference
     compile_benchmark(source_path, out_path, size, dtype)
@@ -2545,9 +2545,9 @@ def test_trmm(size, dtype):
         start = None
         stop = None
         for i, line in enumerate(lines):
-            if "@polybench_timer_start()" in line:
+            if "tail call void (...) @polybench_timer_start()" in line:
                 start = i
-            elif "@polybench_timer_stop()" in line:
+            elif "tail call void (...) @polybench_timer_stop()" in line:
                 assert start is not None
                 stop = i
                 break
