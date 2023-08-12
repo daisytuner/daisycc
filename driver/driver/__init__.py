@@ -178,7 +178,7 @@ def main():
 
         # Link LLVM files
         linker_comand = [
-            "llvm-link",
+            "llvm-link-16",
             "-S",
             "-o",
             str(cache_folder / f"{output_file.stem}.ll"),
@@ -188,7 +188,7 @@ def main():
             return ret_code
 
         # Assemble LLVM files
-        llc_command = ["llc", "-filetype=obj", "-O2"]
+        llc_command = ["llc-16", "-filetype=obj", "-O2"]
         if args.fPIE:
             llc_command.append("-relocation-model=pic")
 
