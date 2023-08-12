@@ -38,9 +38,13 @@ class CLI(object):
             exit(1)
 
         # Prune unprofitable
-        has_loop = sdfg.has_cycles()
-        if not has_loop:
-            for state in sdfg.states():
+        has_loop = False
+        for nsdfg in sdfg.all_sdfgs_recursive():
+            if nsdfg.has_cycles():
+                has_loop = True
+                break
+
+            for state in nsdfg.states():
                 for node in state.nodes():
                     if isinstance(node, dace.nodes.MapEntry):
                         has_loop = True
@@ -50,6 +54,7 @@ class CLI(object):
                     break
 
         if not has_loop:
+            print("Prune SDFG", flush=True)
             exit(1)
 
         if schedule == "gpu":
