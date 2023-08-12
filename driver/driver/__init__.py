@@ -166,7 +166,7 @@ def main():
             return ret_code
 
         # Assemble LLVM files
-        llc_command = ["llc", "-filetype=obj", "-O3"]
+        llc_command = ["llc", "-filetype=obj", "-O2"]
         if args.fPIE:
             llc_command.append("-relocation-model=pic")
 

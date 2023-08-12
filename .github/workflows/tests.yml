@@ -161,6 +161,10 @@ jobs:
         cd driver/
         pip install .[dev]
         cd ..
+    - name: Setup DaCe conf
+      shell: bash -l {0}
+      run: |
+        cp .dace.conf.ci $HOME/.dace.conf
     - name: Run integration tests
       shell: bash -l {0}
       run: |
