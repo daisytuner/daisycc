@@ -1,4 +1,4 @@
 compiler:
   cpu:
-    args: -std=c++14 -O2 -fPIC -Wall -Wextra -Wno-unused-parameter
+    args: -std=c++17 -O2 -fPIC -Wall -Wextra -Wno-unused-parameter
       -Wno-unused-label

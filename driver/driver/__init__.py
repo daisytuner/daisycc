@@ -1,14 +1,14 @@
-import os
 import copy
 import sys
 import shutil
 import argparse
 import subprocess
+import ctypes.util
 
 from typing import List
 from pathlib import Path
 
-LIB_DAISY = Path(os.environ["CONDA_PREFIX"]) / "lib" / "libDaisyLLVMPlugin.so"
+LIB_DAISY = ctypes.util.find_library("DaisyLLVMPlugin")
 
 
 def _execute_command(command: List[str]):
@@ -32,9 +32,9 @@ def main():
     argv = sys.argv
     executable = Path(argv[0]).name
     if executable == "daisycc":
-        compiler = "clang"
+        compiler = "clang-16"
     else:
-        compiler = "clang++"
+        compiler = "clang++-16"
 
     parser = argparse.ArgumentParser(
         prog="daisycc",
@@ -84,8 +84,6 @@ def main():
         _execute_command(f"{compiler}")
     elif args.version:
         _execute_command(f"{compiler} --version")
-    elif args.v:
-        _execute_command(f"{compiler} -v")
     else:
         # Compile
         output_file = Path(args.o)
@@ -102,10 +100,11 @@ def main():
             "-S",
             "-emit-llvm",
             "-O2",
-            "--gcc-toolchain=/usr",
         ]
         if args.std is not None:
             llvm_base_command.append("-std=" + args.std)
+        if args.v:
+            llvm_base_command.append("-v")
         compile_options = [
             "-fno-vectorize",
             "-fno-slp-vectorize",
@@ -132,7 +131,7 @@ def main():
 
             llvm_file_lifted = cache_folder / f"{input_file.stem}_lifted.ll"
             plugin = [
-                "opt",
+                "opt-16",
                 "-S",
                 f"--load-pass-plugin={LIB_DAISY}",
                 "--passes=Daisy",
@@ -184,7 +183,6 @@ def main():
         # Build
         build_command = [
             compiler,
-            "--gcc-toolchain=/usr",
             str(cache_folder / f"{output_file.stem}.o"),
         ]
         build_command += ["-o", output_file]

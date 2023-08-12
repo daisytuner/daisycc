@@ -12,32 +12,17 @@
 #include "llvm/Transforms/Utils/Mem2Reg.h"
 
 #include "polly/RegisterPasses.h"
-#include "polly/Canonicalization.h"
 #include "polly/CodePreparation.h"
-#include "polly/ScopPass.h"
-#include "polly/ScopDetection.h"
-#include "polly/ScopGraphPrinter.h"
-#include "polly/DeadCodeElimination.h"
-#include "polly/DeLICM.h"
-#include "polly/DependenceInfo.h"
-#include "polly/ForwardOpTree.h"
-#include "polly/JSONExporter.h"
-#include "polly/LinkAllPasses.h"
-#include "polly/MaximalStaticExpansion.h"
-#include "polly/PolyhedralInfo.h"
-#include "polly/PruneUnprofitable.h"
-#include "polly/ScopDetection.h"
-#include "polly/ScopInfo.h"
 #include "polly/Simplify.h"
+#include "polly/ForwardOpTree.h"
+#include "polly/DeLICM.h"
+#include "polly/DeadCodeElimination.h"
 
 #include "Scop2SDFG.h"
 
 namespace daisy {
 
 void registerDaisyPasses(llvm::PassBuilder &PB) {
-    // Register polly passes
-    polly::registerPollyPasses(PB);
-
     // Register daisy pass
     llvm::PassInstrumentationCallbacks *PIC = PB.getPassInstrumentationCallbacks();
     PB.registerPipelineParsingCallback(
@@ -79,7 +64,6 @@ void registerDaisyPasses(llvm::PassBuilder &PB) {
                 SPM.addPass(polly::DeLICMPass());
                 SPM.addPass(polly::SimplifyPass(1));
                 SPM.addPass(polly::DeadCodeElimPass());
-                SPM.addPass(polly::PruneUnprofitablePass());
 
                 // ADDED: Scop2SDFG Pass
                 SPM.addPass(daisy::Scop2SDFGPass());
