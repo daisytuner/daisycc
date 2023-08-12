@@ -59,6 +59,9 @@ def main():
     parser.add_argument("-L", action="append", default=[])
     parser.add_argument("-l", action="append", default=[])
 
+    # C++ standard
+    parser.add_argument("-std", choices=["c++98", "c++11", "c++14", "c++17"])
+
     # Compiler options
     parser.add_argument("-ffast-math", action="store_true", default=False)
     parser.add_argument("-fno-unroll-loops", action="store_true", default=False)
@@ -101,6 +104,8 @@ def main():
             "-O2",
             "--gcc-toolchain=/usr",
         ]
+        if args.std is not None:
+            llvm_base_command.append("-std=" + args.std)
         compile_options = [
             "-fno-vectorize",
             "-fno-slp-vectorize",
