@@ -151,6 +151,7 @@ jobs:
         cmake --build .
         sudo cmake --install .
         cd ../../
+        sudo ldconfig
     - name: Install driver
       shell: bash -l {0}
       run: |      
