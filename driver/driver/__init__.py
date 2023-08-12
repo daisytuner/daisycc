@@ -8,7 +8,23 @@ import ctypes.util
 from typing import List
 from pathlib import Path
 
-LIB_DAISY = ctypes.util.find_library("DaisyLLVMPlugin")
+
+def find_plugin():
+    with subprocess.Popen(
+        ["ldconfig", "-p"],
+        stdin=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        stdout=subprocess.PIPE,
+    ) as p:
+        res = str(p.stdout.read())
+        found = res.find("libDaisyLLVMPlugin.so")
+        assert (
+            found != -1
+        ), "Could not find libDaisyLLVMPlugin.so. Please install the plugin and add it to your library search paths (ldconfig)"
+        res = res[found:]
+        res = res[: res.find("\\n")]
+        path = res.split("=>")[1].strip()
+        return path
 
 
 def _execute_command(command: List[str]):
@@ -29,6 +45,8 @@ def _execute_command(command: List[str]):
 
 
 def main():
+    plugin_path = find_plugin()
+
     argv = sys.argv
     executable = Path(argv[0]).name
     if executable == "daisycc":
@@ -81,9 +99,9 @@ def main():
 
     args = parser.parse_args()
     if len(argv) == 1:
-        _execute_command(f"{compiler}")
+        _execute_command([compiler])
     elif args.version:
-        _execute_command(f"{compiler} --version")
+        _execute_command([compiler, "--version"])
     else:
         # Compile
         output_file = Path(args.o)
@@ -133,7 +151,7 @@ def main():
             plugin = [
                 "opt-16",
                 "-S",
-                f"--load-pass-plugin={LIB_DAISY}",
+                f"--load-pass-plugin={plugin_path}",
                 "--passes=Daisy",
                 f"--daisy-schedule={args.fschedule}",
                 f"--daisy-transfer-tune={args.ftransfer_tune}",

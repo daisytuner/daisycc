@@ -27,16 +27,11 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         auto-update-conda: true
-    - name: Install conda packages
-      shell: bash -l {0}
-      run: |
-        conda install -c intel mkl-devel
-    - name: Install
+    - name: Install Package
       shell: bash -l {0}
       run: |      
         pip install git+https://github.com/spcl/dace.git@users/lukas/wcr_conversion
         pip install git+https://github.com/daisytuner/daisytuner.git
-
         pip install .[dev]
     - name: Lint with black
       shell: bash -l {0}
@@ -49,12 +44,10 @@ jobs:
         pytest --cov=scop2sdfg --cov-report=xml tests/unit
 
   plugin:
-    needs: scop2sdfg
     strategy:
       fail-fast: false
       matrix:
         platform: [ubuntu-latest]
-        python-version: ["3.8", "3.9", "3.10"]
     runs-on: ${{ matrix.platform }}
     defaults:
       run:
@@ -69,21 +62,21 @@ jobs:
         sudo apt-add-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main"
         sudo apt update
         sudo apt install libllvm16 llvm-16 llvm-16-dev llvm-16-runtime clang-16 libomp-16-dev libpolly-16-dev
-    - uses: conda-incubator/setup-miniconda@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-        auto-update-conda: true
     - name: Build and install
       shell: bash -l {0}
       run: |      
         mkdir -p build && cd build
-        Polly_DIR=/usr/lib/llvm-16/lib/cmake/polly cmake ..
+        Polly_DIR=/usr/lib/llvm-16/lib/cmake/polly cmake -DCMAKE_INSTALL_PREFIX=/usr/local ..
         cmake --build .
         sudo cmake --install .
         cd ../
+    - name: Test Plugin Load
+      shell: bash -l {0}
+      run: |      
+        opt-16 --load-pass-plugin=build/lib/libDaisyLLVMPlugin.so --help | grep daisy
 
   driver:
-    needs: plugin
+    needs: [scop2sdfg, plugin]
     strategy:
       fail-fast: false
       matrix:
@@ -154,7 +147,7 @@ jobs:
       run: |
         cd plugin/    
         mkdir -p build && cd build
-        Polly_DIR=/usr/lib/llvm-16/lib/cmake/polly cmake ..
+        Polly_DIR=/usr/lib/llvm-16/lib/cmake/polly cmake -DCMAKE_INSTALL_PREFIX=/usr/local ..
         cmake --build .
         sudo cmake --install .
         cd ../../
