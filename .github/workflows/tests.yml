@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-latest, macos-latest]
+        platform: [ubuntu-latest]
         python-version: ["3.8", "3.9", "3.10"]
     runs-on: ${{ matrix.platform }}
     defaults:
@@ -34,13 +34,10 @@ jobs:
     - name: Install
       shell: bash -l {0}
       run: |      
-        pip install .[dev]
-
-        pip uninstall -y dace
         pip install git+https://github.com/spcl/dace.git@users/lukas/wcr_conversion
+        pip install git+https://github.com/daisytuner/daisytuner.git
 
-        pip uninstall -y daisytuner
-        pip install git+https://github.com/daisytuner/daisytuner.git@users/lukas/optimization
+        pip install .[dev]
     - name: Lint with black
       shell: bash -l {0}
       run: |
@@ -56,7 +53,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-latest, macos-latest]
+        platform: [ubuntu-latest]
         python-version: ["3.8", "3.9", "3.10"]
     runs-on: ${{ matrix.platform }}
     defaults:
@@ -65,21 +62,24 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Install LLVM
+      shell: bash -l {0}
+      run: |
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        sudo apt-add-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main"
+        sudo apt update
+        sudo apt install libllvm16 llvm-16 llvm-16-dev llvm-16-runtime clang-16 libomp-16-dev libpolly-16-dev
     - uses: conda-incubator/setup-miniconda@v2
       with:
         python-version: ${{ matrix.python-version }}
         auto-update-conda: true
-    - name: Install dependencies
-      shell: bash -l {0}
-      run: |
-        conda install -c conda-forge llvmdev=16.0.4 polly=16.0.4
     - name: Build and install
       shell: bash -l {0}
       run: |      
         mkdir -p build && cd build
-        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA ..
+        Polly_DIR=/usr/lib/llvm-16/lib/cmake/polly cmake ..
         cmake --build .
-        cmake --install .
+        sudo cmake --install .
         cd ../
 
   driver:
@@ -87,7 +87,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-latest, macos-latest]
+        platform: [ubuntu-latest]
         python-version: ["3.8", "3.9", "3.10"]
     runs-on: ${{ matrix.platform }}
     defaults:
@@ -125,6 +125,13 @@ jobs:
       shell: bash -l {0}
       run: |
         sudo apt install libopenblas-dev liblapack-dev libopenmpi-dev libpnetcdf-dev ncview
+    - name: Install LLVM
+      shell: bash -l {0}
+      run: |
+        wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+        sudo apt-add-repository "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main"
+        sudo apt update
+        sudo apt install libllvm16 llvm-16 llvm-16-dev llvm-16-runtime clang-16 libomp-16-dev libpolly-16-dev
     - uses: conda-incubator/setup-miniconda@v2
       with:
         python-version: ${{ matrix.python-version }}
@@ -133,27 +140,23 @@ jobs:
       shell: bash -l {0}
       run: |
         conda install -c intel mkl-devel
-        conda install -c conda-forge llvmdev=16.0.4 clangdev=16.0.4 polly=16.0.4
     - name: Install scop2sdfg
       shell: bash -l {0}
       run: |      
+        pip install git+https://github.com/spcl/dace.git@users/lukas/wcr_conversion
+        pip install git+https://github.com/daisytuner/daisytuner.git
+
         cd scop2sdfg
         pip install .[dev]
         cd ..
-
-        pip uninstall -y dace
-        pip install git+https://github.com/spcl/dace.git@users/lukas/wcr_conversion
-
-        pip uninstall -y daisytuner
-        pip install git+https://github.com/daisytuner/daisytuner.git@users/lukas/optimization
     - name: Install DaisyLLVMPlugin
       shell: bash -l {0}
       run: |
         cd plugin/    
         mkdir -p build && cd build
-        cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$CONDA ..
+        Polly_DIR=/usr/lib/llvm-16/lib/cmake/polly cmake ..
         cmake --build .
-        cmake --install .
+        sudo cmake --install .
         cd ../../
     - name: Install driver
       shell: bash -l {0}
@@ -161,7 +164,11 @@ jobs:
         cd driver/
         pip install .[dev]
         cd ..
+    - name: Setup DaCe conf
+      shell: bash -l {0}
+      run: |
+        cp .dace.conf.ci $HOME/.dace.conf
     - name: Run integration tests
       shell: bash -l {0}
       run: |
-        CONDA_PREFIX=$CONDA pytest tests/
+        pytest tests/

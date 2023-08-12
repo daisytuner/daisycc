@@ -1,14 +1,10 @@
 list(APPEND CMAKE_PREFIX_PATH "$ENV{CONDA_PREFIX}")
 
 find_package(LLVM 16 REQUIRED CONFIG)
-include_directories(SYSTEM
-  ${LLVM_INCLUDE_DIRS}
-)
+include_directories(${LLVM_INCLUDE_DIRS})
 
-find_package(Polly 16 REQUIRED CONFIG)
-include_directories(SYSTEM
-  ${Polly_INCLUDE_DIRS}
-)
+find_package(Polly REQUIRED CONFIG)
+include_directories(${Polly_INCLUDE_DIRS})
 
 if(NOT LLVM_ENABLE_RTTI)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
@@ -19,7 +15,7 @@ add_library(DaisyLLVMPlugin SHARED
   JScop.cpp
   RegisterPasses.cpp
 )
-target_link_libraries(DaisyLLVMPlugin Polly "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>")
+target_link_libraries(DaisyLLVMPlugin "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>")
 
 include(GNUInstallDirs)
 install(TARGETS DaisyLLVMPlugin
