@@ -34,13 +34,10 @@ jobs:
     - name: Install
       shell: bash -l {0}
       run: |      
-        pip install .[dev]
-
-        pip uninstall -y dace
         pip install git+https://github.com/spcl/dace.git@users/lukas/wcr_conversion
+        pip install git+https://github.com/daisytuner/daisytuner.git
 
-        pip uninstall -y daisytuner
-        pip install git+https://github.com/daisytuner/daisytuner.git@users/lukas/optimization
+        pip install .[dev]
     - name: Lint with black
       shell: bash -l {0}
       run: |
@@ -137,15 +134,12 @@ jobs:
     - name: Install scop2sdfg
       shell: bash -l {0}
       run: |      
+        pip install git+https://github.com/spcl/dace.git@users/lukas/wcr_conversion
+        pip install git+https://github.com/daisytuner/daisytuner.git
+
         cd scop2sdfg
         pip install .[dev]
         cd ..
-
-        pip uninstall -y dace
-        pip install git+https://github.com/spcl/dace.git@users/lukas/wcr_conversion
-
-        pip uninstall -y daisytuner
-        pip install git+https://github.com/daisytuner/daisytuner.git@users/lukas/optimization
     - name: Install DaisyLLVMPlugin
       shell: bash -l {0}
       run: |
