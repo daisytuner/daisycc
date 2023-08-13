@@ -1,3 +1,5 @@
+set(CMAKE_CXX_STANDARD 17 CACHE STRING "")
+
 list(APPEND CMAKE_PREFIX_PATH "$ENV{CONDA_PREFIX}")
 
 find_package(LLVM 16 REQUIRED CONFIG)
@@ -15,6 +17,7 @@ add_library(DaisyLLVMPlugin SHARED
   JScop.cpp
   RegisterPasses.cpp
 )
+set_target_properties(DaisyLLVMPlugin PROPERTIES VERSION ${PROJECT_VERSION})
 target_link_libraries(DaisyLLVMPlugin "$<$<PLATFORM_ID:Darwin>:-undefined dynamic_lookup>")
 
 include(GNUInstallDirs)
