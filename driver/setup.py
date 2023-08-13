@@ -12,7 +12,7 @@ setup(
     url="https://daisytuner.com",
     python_requires=">=3.8",
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
-    install_requires=["daisytuner>=0.2.3", "scop2sdfg>=0.0.1", "fire>=0.5.0"],
+    install_requires=["fire>=0.5.0"],
     extras_require={"dev": ["black==22.10.0", "pytest>=7.2.0", "pytest-cov>=4.1.0"]},
     entry_points={
         "console_scripts": [
