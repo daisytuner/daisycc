@@ -17,7 +17,7 @@ setup(
     entry_points={
         "console_scripts": [
             "daisycc = driver:main",
-            "daisycc++ = driver:main",
+            "daisycxx = driver:main",
         ]
     },
 )

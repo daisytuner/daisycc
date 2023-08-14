@@ -3,7 +3,6 @@ import sys
 import shutil
 import argparse
 import subprocess
-import ctypes.util
 
 from typing import List
 from pathlib import Path

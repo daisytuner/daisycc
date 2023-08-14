@@ -37,7 +37,7 @@ def test_miniWeather():
 
     cmd = (
         [
-            "daisycc++",
+            "daisycxx",
             "-std=c++11",
             "-fopenmp",
             "-ffast-math",
