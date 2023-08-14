@@ -1,5 +1,7 @@
 <p align="center"><img src="figures/daisy.png" width="300"/></p>
 
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-white.svg)](https://snapcraft.io/daisycc)
+
 <a href="https://github.com/psf/black"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a> 
 [![CI](https://github.com/daisytuner/daisycc/actions/workflows/tests.yml/badge.svg)](https://github.com/daisytuner/daisycc/actions/workflows/tests.yml)
 
