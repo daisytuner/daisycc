@@ -55,7 +55,13 @@ private:
         if (!system(NULL))
             return false;
 
-        std::string command = "scop2sdfg --source_path=";
+        std::string command;
+        if(getenv("SCOP2SDFG_PATH")) {
+            command = getenv("SCOP2SDFG_PATH");
+        } else {
+            command = "scop2sdfg";
+        }
+        command += " --source_path=";
         command += source_path;
         command += " --scop='";
         command += jscop_str;

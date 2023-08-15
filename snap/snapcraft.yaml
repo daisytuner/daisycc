@@ -1,0 +1,107 @@
+name: daisycc
+base: core22
+version: '0.0.1'
+summary: Daisy Optimizing C/C++ Compiler Compiler based on LLVM and DaCe
+description: |
+ daisycc is an optimizing C/C++ compiler collection based on the LLVM infrastructure and the DaCe framework. daisycc lifts loop nests to stateful dataflow multigraphs (SDFG) via polyhedral analysis and optimizes them using the similarity-based transfer tuning algorithm (https://dl.acm.org/doi/abs/10.1145/3577193.3593714).
+
+grade: stable
+confinement: classic
+
+architectures:
+  - build-on: amd64
+
+package-repositories:
+  - type: apt
+    components: [main]
+    formats: [deb]
+    suites: [llvm-toolchain-jammy-16]
+    key-id: 6084F3CF814B57C1CF12EFD515CF4D18AF4F7421
+    key-server: https://apt.llvm.org/llvm-snapshot.gpg.key
+    url: http://apt.llvm.org/jammy/
+
+parts:
+  scop2sdfg:
+    plugin: python
+    source-type: git
+    source: https://github.com/daisytuner/daisycc.git
+    source-subdir: scop2sdfg
+    python-packages:
+     - git+https://github.com/spcl/dace.git@users/lukas/wcr_conversion
+    stage-packages:
+     - python3-venv
+     - python3-minimal
+     - python3.10-minimal
+
+  driver:
+    plugin: python
+    source-type: git
+    source: https://github.com/daisytuner/daisycc.git
+    source-subdir: driver
+    stage-packages:
+     - python3-venv
+     - python3-minimal
+     - python3.10-minimal
+    stage:
+      - -lib/python*/site-packages/pip/
+      - -lib/python*/site-packages/pkg_resources
+      - -lib/python*/site-packages/setuptools/
+      - -lib/python*/site-packages/wheel/
+      - -lib/python*/site-packages/fire/
+      - -lib/python*/site-packages/termcolor/
+      - -lib/python*/site-packages/wheel*/RECORD
+      - -lib/python*/site-packages/pip*/RECORD
+      - -lib/python*/site-packages/_distutils_hack/__init__.py
+      - -lib/python*/site-packages/distutils-precedence.pth
+      - -lib/python*/site-packages/_distutils_hack/__pycache__/__init__.*.pyc
+      - -lib/python*/site-packages/_distutils_hack/__pycache__/override.*.pyc
+      - -lib/python*/site-packages/__pycache__/six.*.pyc
+      - -bin/activate
+      - -bin/activate.csh
+      - -bin/activate.fish
+      - -pyvenv.cfg
+
+  plugin:
+    source-type: git
+    source: https://github.com/daisytuner/daisycc.git
+    source-subdir: plugin
+    plugin: cmake
+    cmake-parameters:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DCMAKE_PREFIX_PATH="/usr/lib/llvm-16/lib/cmake/polly;$CMAKE_PREFIX_PATH"
+    build-packages:
+      - build-essential
+      - gcc
+      - g++
+      - llvm-16
+      - llvm-16-dev
+      - clang-16
+      - libpolly-16-dev
+    stage-packages:
+      - llvm-16
+      - clang-16
+      - libpolly-16-dev
+
+apps:
+  scop2sdfg:
+    command: bin/scop2sdfg
+    environment:
+      PATH: $SNAP/usr/bin:$PATH
+      PYTHONPATH: $SNAP/lib/python3.10/site-packages
+
+  daisycc:
+    command: bin/daisycc
+    environment:
+      PATH: $SNAP/usr/bin:$PATH
+      PYTHONPATH: $SNAP/lib/python3.10/site-packages
+      LIBDAISY_PATH: $SNAP/usr/lib/x86_64-linux-gnu/libDaisyLLVMPlugin.so
+      SCOP2SDFG_PATH: daisycc.scop2sdfg
+
+  daisycxx:
+    command: bin/daisycxx
+    environment:
+      PATH: $SNAP/bin:$SNAP/usr/bin:$PATH
+      PYTHONPATH: $SNAP/lib/python3.10/site-packages
+      LIBDAISY_PATH: $SNAP/usr/lib/x86_64-linux-gnu/libDaisyLLVMPlugin.so
+      SCOP2SDFG_PATH: daisycc.scop2sdfg

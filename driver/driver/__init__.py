@@ -1,3 +1,4 @@
+import os
 import copy
 import sys
 import shutil
@@ -9,6 +10,9 @@ from pathlib import Path
 
 
 def find_plugin():
+    if "LIBDAISY_PATH" in os.environ:
+        return os.environ["LIBDAISY_PATH"]
+
     with subprocess.Popen(
         ["ldconfig", "-p"],
         stdin=subprocess.DEVNULL,
@@ -99,6 +103,8 @@ def main():
     args = parser.parse_args()
     if len(argv) == 1:
         _execute_command([compiler])
+    elif len(argv) == 2 and args.v:
+        _execute_command([compiler, "-v"])
     elif args.version:
         _execute_command([compiler, "--version"])
     else:

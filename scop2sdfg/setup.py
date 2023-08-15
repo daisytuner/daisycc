@@ -18,7 +18,7 @@ setup(
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     install_requires=[
         "dace>=0.14.3",
-        "daisytuner>=0.2.3",
+        "daisytuner>=0.2.4",
         "islpy>=2023.1",
         "fire>=0.5.0",
     ],

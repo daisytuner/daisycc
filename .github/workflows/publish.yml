@@ -7,27 +7,18 @@ on:
 
 jobs:
   publish:
-    name: Publish wheels
+    name: Publish
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: snapcore/action-build@v1
+        id: build
+      - uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAPCRAFT_STORE_LOGIN }}
         with:
-          python-version: '3.x'
-
-      - name: Install build
-        run: python -m pip install build --user
-
-      - name: Build wheels
-        run: |
-          python -m build scop2sdfg/ --sdist --wheel --outdir dist/
-          python -m build driver/ --sdist --wheel --outdir dist/
-
-      - name: Publish distribution to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.DAISYCC_PYPI_API_TOKEN }}
-          packages-dir: dist
+          snap: ${{ steps.build.outputs.snap }}
+          release: stable
+  
