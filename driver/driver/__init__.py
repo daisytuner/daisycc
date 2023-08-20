@@ -85,7 +85,11 @@ def main():
     parser.add_argument("-l", action="append", default=[])
 
     # C++ standard
-    parser.add_argument("-std", choices=["c++98", "c++11", "c++14", "c++17"])
+    parser.add_argument(
+        "-std",
+        choices=["c++98", "c++11", "c++14", "c++17", "C89", "C99", "c11", "c17", "C23"],
+    )
+    parser.add_argument("-stdlib", choices=["libc++", "libstdc++", "platform"])
 
     # Optimization levels
     parser.add_argument("-O0", action="store_true", default=False)
@@ -146,6 +150,8 @@ def main():
         ]
         if args.std is not None:
             llvm_base_command.append("-std=" + args.std)
+        if args.stdlib is not None:
+            llvm_base_command.append("-stdlib=" + args.stdlib)
         if args.v:
             llvm_base_command.append("-v")
         if args.w:
