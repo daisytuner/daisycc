@@ -65,6 +65,14 @@ def _compile(compiler, args, output_file, cache_folder, plugin_path):
         "-emit-llvm",
         opt_level,
     ]
+    if args.v:
+        llvm_base_command.append("-v")
+    if args.w:
+        llvm_base_command.append("-w")
+    if args.g:
+        llvm_base_command.append("-g")
+    if args.march is not None:
+        llvm_base_command.append("-march=" + args.march)
     if args.std is not None:
         llvm_base_command.append("-std=" + args.std)
     if args.stdlib is not None:
@@ -73,10 +81,6 @@ def _compile(compiler, args, output_file, cache_folder, plugin_path):
         llvm_base_command.append("--target=" + args.target)
     if args.sysroot is not None:
         llvm_base_command.append("--sysroot=" + args.sysroot)
-    if args.v:
-        llvm_base_command.append("-v")
-    if args.w:
-        llvm_base_command.append("-w")
     compile_options = [
         "-fno-vectorize",
         "-fno-slp-vectorize",
@@ -218,6 +222,8 @@ def main():
     parser.add_argument("-stdlib", choices=["libc++", "libstdc++", "platform"])
 
     # Optimization levels
+    parser.add_argument("-g", action="store_true", default=False)
+
     parser.add_argument("-O0", action="store_true", default=False)
     parser.add_argument("-O1", action="store_true", default=False)
     parser.add_argument("-O2", action="store_true", default=True)
@@ -232,6 +238,8 @@ def main():
     parser.add_argument("-fno-unroll-loops", action="store_true", default=False)
     parser.add_argument("-fopenmp", action="store_true", default=False)
     parser.add_argument("-fPIE", action="store_true", default=True)
+
+    parser.add_argument("-march")
 
     # Scheduling options
     parser.add_argument("-ftransfer-tune", action="store_true", default=False)
