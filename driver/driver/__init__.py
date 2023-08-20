@@ -72,6 +72,10 @@ def main():
     parser.add_argument("-D", action="append", default=[])
     parser.add_argument("-U", action="append", default=[])
 
+    # Warnings
+    parser.add_argument("-w", action="store_true", default=False)
+    parser.add_argument("-W", action="append", default=[])
+
     # Includes
     parser.add_argument("-isystem", action="append", default=[])
     parser.add_argument("-I", action="append", default=[])
@@ -82,6 +86,12 @@ def main():
 
     # C++ standard
     parser.add_argument("-std", choices=["c++98", "c++11", "c++14", "c++17"])
+
+    # Optimization levels
+    parser.add_argument("-O0", action="store_true", default=False)
+    parser.add_argument("-O1", action="store_true", default=False)
+    parser.add_argument("-O2", action="store_true", default=True)
+    parser.add_argument("-O3", action="store_true", default=False)
 
     # Compiler options
     parser.add_argument("-ffast-math", action="store_true", default=False)
@@ -117,17 +127,29 @@ def main():
             shutil.rmtree(cache_folder)
         cache_folder.mkdir(exist_ok=False, parents=False)
 
+        ## Opt level
+        if args.O3:
+            opt_level = "-O3"
+        elif args.O2:
+            opt_level = "-O2"
+        elif args.O1:
+            opt_level = "-O1"
+        elif args.O0:
+            opt_level = "-O0"
+
         # Compile and lift
         llvm_base_command = [
             compiler,
             "-S",
             "-emit-llvm",
-            "-O2",
+            opt_level,
         ]
         if args.std is not None:
             llvm_base_command.append("-std=" + args.std)
         if args.v:
             llvm_base_command.append("-v")
+        if args.w:
+            llvm_base_command.append("-w")
         compile_options = [
             "-fno-vectorize",
             "-fno-slp-vectorize",
@@ -138,10 +160,11 @@ def main():
         if args.fno_unroll_loops:
             compile_options.append("-fno-unroll-loops")
         macros = ["-D" + arg for arg in args.D] + ["-U" + arg for arg in args.U]
+        wanings = ["-W" + arg for arg in args.W]
         includes = ["-isystem" + arg for arg in args.isystem] + [
             "-I" + arg for arg in args.I
         ]
-        llvm_command = llvm_base_command + compile_options + macros + includes
+        llvm_command = llvm_base_command + compile_options + macros + wanings + includes
 
         llvm_source_files = []
         sdfg_libs = []
@@ -193,7 +216,7 @@ def main():
             return ret_code
 
         # Assemble LLVM files
-        llc_command = ["llc-16", "-filetype=obj", "-O2"]
+        llc_command = ["llc-16", "-filetype=obj", opt_level]
         if args.fPIE:
             llc_command.append("-relocation-model=pic")
 
