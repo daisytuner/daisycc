@@ -97,6 +97,10 @@ def main():
     parser.add_argument("-O2", action="store_true", default=True)
     parser.add_argument("-O3", action="store_true", default=False)
 
+    # Target
+    parser.add_argument("--target", type=str)
+    parser.add_argument("--sysroot", type=str)
+
     # Compiler options
     parser.add_argument("-ffast-math", action="store_true", default=False)
     parser.add_argument("-fno-unroll-loops", action="store_true", default=False)
@@ -152,6 +156,10 @@ def main():
             llvm_base_command.append("-std=" + args.std)
         if args.stdlib is not None:
             llvm_base_command.append("-stdlib=" + args.stdlib)
+        if args.target is not None:
+            llvm_base_command.append("--target=" + args.target)
+        if args.sysroot is not None:
+            llvm_base_command.append("--sysroot=" + args.sysroot)
         if args.v:
             llvm_base_command.append("-v")
         if args.w:
@@ -237,6 +245,10 @@ def main():
             compiler,
             str(cache_folder / f"{output_file.stem}.o"),
         ]
+        if args.target is not None:
+            build_command.append("--target=" + args.target)
+        if args.sysroot is not None:
+            build_command.append("--sysroot=" + args.sysroot)
         build_command += ["-o", output_file]
 
         build_command += ["-L" + arg for arg in args.L]
