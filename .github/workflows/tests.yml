@@ -30,7 +30,7 @@ jobs:
     - name: Install Package
       shell: bash -l {0}
       run: |      
-        pip install git+https://github.com/spcl/dace.git@users/lukas/wcr_conversion
+        pip install git+https://github.com/spcl/dace.git@daisy
         pip install .[dev]
     - name: Lint with black
       shell: bash -l {0}
@@ -135,7 +135,7 @@ jobs:
     - name: Install scop2sdfg
       shell: bash -l {0}
       run: |      
-        pip install git+https://github.com/spcl/dace.git@users/lukas/wcr_conversion
+        pip install git+https://github.com/spcl/dace.git@daisy
 
         cd scop2sdfg
         pip install .[dev]

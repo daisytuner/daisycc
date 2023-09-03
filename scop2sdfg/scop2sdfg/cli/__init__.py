@@ -5,9 +5,8 @@ import traceback
 
 from pathlib import Path
 
-from dace.transformation.auto.auto_optimize import make_transients_persistent
-
 from daisytuner.optimization import Optimization
+from daisytuner.transformations import MapSchedule
 
 from scop2sdfg.scop.scop import Scop
 from scop2sdfg.codegen.generator import Generator
@@ -57,27 +56,24 @@ class CLI(object):
             print("Prune SDFG", flush=True)
             exit(1)
 
+        # Disable OpenMP sections
+        sdfg.openmp_sections = False
+
         if schedule == "gpu":
             sdfg.apply_gpu_transformations()
-
-        #  Tune and compile
-        if transfer_tune and schedule != "gpu":
-            report = Optimization.apply(
-                sdfg=sdfg, topK=topk, use_profiling_features=use_profiling_features
+        elif schedule == "sequential":
+            sdfg.apply_transformations_repeated(
+                MapSchedule, options={"schedule_type": dace.ScheduleType.Sequential}
             )
-
-        if schedule == "sequential":
-            for nsdfg in sdfg.all_sdfgs_recursive():
-                for state in nsdfg.states():
-                    for node in state.nodes():
-                        if isinstance(node, dace.nodes.MapEntry):
-                            node.map.schedule = dace.ScheduleType.Sequential
+        elif schedule == "multicore":
+            if transfer_tune:
+                report = Optimization.apply(
+                    sdfg=sdfg, topK=topk, use_profiling_features=use_profiling_features
+                )
 
         # Set high-level schedule options
-        sdfg.openmp_sections = False
         dace.sdfg.infer_types.infer_connector_types(sdfg)
         dace.sdfg.infer_types.set_default_schedule_and_storage_types(sdfg, None)
-        make_transients_persistent(sdfg, dace.DeviceType.CPU)
 
         try:
             sdfg.compile()

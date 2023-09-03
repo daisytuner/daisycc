@@ -9,11 +9,7 @@ from typing import Dict
 from dace.sdfg.utils import consolidate_edges
 from dace.frontend.python.astutils import negate_expr
 
-from daisytuner.optimization.canonicalization import (
-    AutoParallelization,
-    LoopSimplification,
-    GreedyLoopFusion,
-)
+from daisytuner.optimization import Normalization
 
 from scop2sdfg.scop.scop import Scop
 from scop2sdfg.scop.value import Value
@@ -390,18 +386,7 @@ class Generator:
         consolidate_edges(sdfg)
         sdfg.simplify()
 
-        # Parallelization
-        ## First round of auto-parallelization
-        AutoParallelization.apply(sdfg)
-        LoopSimplification.apply(sdfg)
-
-        ## Second round of auto-parallelization
-        AutoParallelization.apply(sdfg)
-        LoopSimplification.apply(sdfg)
-
-        ## Greedy loop fusion
-        GreedyLoopFusion.apply(sdfg)
-        sdfg.validate()
+        # Normalization.apply(sdfg)
 
         # Shape inference
         shapes = infer_shape(scop, sdfg)
