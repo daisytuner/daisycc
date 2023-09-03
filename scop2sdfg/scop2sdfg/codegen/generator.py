@@ -1,6 +1,7 @@
 import copy
 import dace
 import sympy
+import warnings
 import islpy as isl
 
 from pathlib import Path
@@ -386,7 +387,11 @@ class Generator:
         consolidate_edges(sdfg)
         sdfg.simplify()
 
-        # Normalization.apply(sdfg)
+        Normalization.apply(sdfg)
+        if not Normalization.is_normalized(sdfg):
+            warnings.warn(
+                "Normalization did not succeed. This might result in sub-optimal performance."
+            )
 
         # Shape inference
         shapes = infer_shape(scop, sdfg)

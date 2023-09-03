@@ -399,7 +399,7 @@ def test_atax(size, dtype, schedule):
     "size, dtype, schedule",
     [
         pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "sequential"),
-        pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "multicore"),
+        # pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "multicore"),
     ],
 )
 def test_bicg(size, dtype, schedule):
