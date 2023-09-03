@@ -136,6 +136,7 @@ jobs:
       shell: bash -l {0}
       run: |      
         pip install git+https://github.com/spcl/dace.git@daisy
+        pip install git+https://github.com/daisytuner/daisytuner.git
 
         cd scop2sdfg
         pip install .[dev]
