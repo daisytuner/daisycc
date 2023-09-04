@@ -386,7 +386,6 @@ class Generator:
 
         dace.propagate_memlets_sdfg(sdfg)
         consolidate_edges(sdfg)
-        sdfg.simplify()
 
         Normalization.apply(sdfg)
         if not Normalization.is_normalized(sdfg):
