@@ -663,7 +663,7 @@ def test_covariance(size, dtype, schedule):
 #     "size, dtype, schedule",
 #     [
 #       pytest.param("SMALL_DATASET", "DATA_TYPE_IS_FLOAT", "sequential"),
-#       pytest.param("SMALL_DATASET", "DATA_TYPE_IS_FLOAT", "multicore")",
+#       pytest.param("SMALL_DATASET", "DATA_TYPE_IS_FLOAT", "multicore"),
 #     ],
 # )
 # def test_deriche(size, dtype, schedule):
@@ -715,75 +715,75 @@ def test_covariance(size, dtype, schedule):
 
 #     for array in reference_arrays:
 #         assert array in opt_arrays
-#         assert np.allclose(reference_arrays[array], opt_arrays[array], atol=10 equal_nan=False)
+#         assert np.allclose(reference_arrays[array], opt_arrays[array], atol=1e-4, equal_nan=False)
 
 #     shutil.rmtree(Path() / ".daisycache")
 
 
-# @pytest.mark.parametrize(
-#     "size, dtype, schedule",
-#     [
-#         pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "sequential"),
-#         pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "multicore"),
-#     ],
-# )
-# def test_doitgen(size, dtype, schedule):
-#     benchmark_path = Path(__file__).parent / "doitgen"
-#     source_path = benchmark_path / f"{benchmark_path.name}.c"
-#     out_path = benchmark_path / f"{benchmark_path.name}.out"
-#     out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
+@pytest.mark.parametrize(
+    "size, dtype, schedule",
+    [
+        pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "sequential"),
+        pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "multicore"),
+    ],
+)
+def test_doitgen(size, dtype, schedule):
+    benchmark_path = Path(__file__).parent / "doitgen"
+    source_path = benchmark_path / f"{benchmark_path.name}.c"
+    out_path = benchmark_path / f"{benchmark_path.name}.out"
+    out_opt_path = benchmark_path / f"{benchmark_path.name}_daisy.out"
 
-#     # Build reference
-#     compile_benchmark(source_path, out_path, size, dtype)
+    # Build reference
+    compile_benchmark(source_path, out_path, size, dtype)
 
-#     # SDFG lifting
-#     sdfgs = lift_sdfg(source_path, out_opt_path, size, dtype, schedule)
+    # SDFG lifting
+    sdfgs = lift_sdfg(source_path, out_opt_path, size, dtype, schedule)
 
-#     # Execute reference
-#     reference_runtime, reference_arrays = run_benchmark(out_path, dtype)
+    # Execute reference
+    reference_runtime, reference_arrays = run_benchmark(out_path, dtype)
 
-#     # Execute opt
-#     opt_runtime, opt_arrays = run_benchmark(out_opt_path, dtype)
+    # Execute opt
+    opt_runtime, opt_arrays = run_benchmark(out_opt_path, dtype)
 
-#     with open(
-#         Path() / ".daisycache" / f"{out_opt_path.stem}.ll", mode="r", encoding="utf-8"
-#     ) as handle:
-#         lines = handle.readlines()
-#         start = None
-#         stop = None
-#         for i, line in enumerate(lines):
-#             if "tail call void (...) @polybench_timer_start()" in line:
-#                 start = i
-#             elif "tail call void (...) @polybench_timer_stop()" in line:
-#                 assert start is not None
-#                 stop = i
-#                 break
+    with open(
+        Path() / ".daisycache" / f"{out_opt_path.stem}.ll", mode="r", encoding="utf-8"
+    ) as handle:
+        lines = handle.readlines()
+        start = None
+        stop = None
+        for i, line in enumerate(lines):
+            if "tail call void (...) @polybench_timer_start()" in line:
+                start = i
+            elif "tail call void (...) @polybench_timer_stop()" in line:
+                assert start is not None
+                stop = i
+                break
 
-#         assert start is not None and stop is not None
+        assert start is not None and stop is not None
 
-#         init = False
-#         inserted_sdfgs = 0
-#         for i in range(start + 1, stop, 1):
-#             if "@__dace_init" in lines[i]:
-#                 assert not init
-#                 init = True
-#             elif "@__dace_exit" in lines[i]:
-#                 assert init
-#                 init = False
-#                 inserted_sdfgs += 1
+        init = False
+        inserted_sdfgs = 0
+        for i in range(start + 1, stop, 1):
+            if "@__dace_init" in lines[i]:
+                assert not init
+                init = True
+            elif "@__dace_exit" in lines[i]:
+                assert init
+                init = False
+                inserted_sdfgs += 1
 
-#         assert inserted_sdfgs > 0
+        assert inserted_sdfgs > 0
 
-#     for array in reference_arrays:
-#         assert array in opt_arrays
-#         assert np.allclose(
-#             reference_arrays[array],
-#             opt_arrays[array],
-#             atol=1e-4,
-#             equal_nan=False,
-#         )
+    for array in reference_arrays:
+        assert array in opt_arrays
+        assert np.allclose(
+            reference_arrays[array],
+            opt_arrays[array],
+            atol=1e-4,
+            equal_nan=False,
+        )
 
-#     shutil.rmtree(Path() / ".daisycache")
+    shutil.rmtree(Path() / ".daisycache")
 
 
 # @pytest.mark.parametrize(
