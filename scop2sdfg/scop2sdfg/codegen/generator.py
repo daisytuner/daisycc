@@ -404,7 +404,11 @@ class Generator:
                 if str(val) in sdfg.free_symbols:
                     dim = shapes[name][i][1]
                     if dim == -math.inf:
-                        continue
+                        if i == 0:
+                            dim = 1
+                        else:
+                            continue
+
                     symbol_mapping[str(val)] = dim
 
         sdfg.specialize(symbol_mapping)
