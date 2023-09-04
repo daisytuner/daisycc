@@ -1,6 +1,7 @@
 import copy
 import dace
 import sympy
+import math
 import warnings
 import islpy as isl
 
@@ -385,7 +386,6 @@ class Generator:
 
         dace.propagate_memlets_sdfg(sdfg)
         consolidate_edges(sdfg)
-        sdfg.simplify()
 
         Normalization.apply(sdfg)
         if not Normalization.is_normalized(sdfg):
@@ -403,6 +403,12 @@ class Generator:
             for i, val in enumerate(memref.shape):
                 if str(val) in sdfg.free_symbols:
                     dim = shapes[name][i][1]
+                    if dim == -math.inf:
+                        if i == 0:
+                            dim = 1
+                        else:
+                            continue
+
                     symbol_mapping[str(val)] = dim
 
         sdfg.specialize(symbol_mapping)
