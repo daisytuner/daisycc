@@ -662,9 +662,8 @@ def test_covariance(size, dtype, schedule):
 # @pytest.mark.parametrize(
 #     "size, dtype, schedule",
 #     [
-#       pytest.param("SMALL_DATASET "DATA_TYPE_IS_FLOAT", "sequential"),
-#       pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "sequential"),
-#       pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "multicore")",
+#       pytest.param("SMALL_DATASET", "DATA_TYPE_IS_FLOAT", "sequential"),
+#       pytest.param("SMALL_DATASET", "DATA_TYPE_IS_FLOAT", "multicore")",
 #     ],
 # )
 # def test_deriche(size, dtype, schedule):
@@ -918,8 +917,8 @@ def test_fdtd_2d(size, dtype, schedule):
 @pytest.mark.parametrize(
     "size, dtype, schedule",
     [
-        pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "sequential"),
-        pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "multicore"),
+        pytest.param("SMALL_DATASET", "DATA_TYPE_IS_INT", "sequential"),
+        pytest.param("SMALL_DATASET", "DATA_TYPE_IS_INT", "multicore"),
     ],
 )
 def test_floyd_warshall(size, dtype, schedule):
@@ -1705,8 +1704,8 @@ def test_mvt(size, dtype, schedule):
 @pytest.mark.parametrize(
     "size, dtype, schedule",
     [
-        pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "sequential"),
-        pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "multicore"),
+        pytest.param("SMALL_DATASET", "DATA_TYPE_IS_INT", "sequential"),
+        pytest.param("SMALL_DATASET", "DATA_TYPE_IS_INT", "multicore"),
     ],
 )
 def test_nussinov(size, dtype, schedule):
@@ -1754,7 +1753,7 @@ def test_nussinov(size, dtype, schedule):
                 init = False
                 inserted_sdfgs += 1
 
-        assert inserted_sdfgs == 0
+        assert inserted_sdfgs > 0
 
     for array in reference_arrays:
         assert array in opt_arrays

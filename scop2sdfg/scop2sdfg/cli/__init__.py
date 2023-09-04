@@ -2,6 +2,7 @@ import dace
 import shutil
 import fire
 import traceback
+import sys
 
 from pathlib import Path
 
@@ -34,7 +35,7 @@ class CLI(object):
             sdfg = Generator.generate(scop)
         except:
             traceback.print_exc()
-            exit(1)
+            sys.exit(1)
 
         # Prune unprofitable
         has_loop = False
@@ -54,7 +55,7 @@ class CLI(object):
 
         if not has_loop:
             print("Prune SDFG", flush=True)
-            exit(1)
+            sys.exit(1)
 
         # Disable OpenMP sections
         sdfg.openmp_sections = False
@@ -83,9 +84,9 @@ class CLI(object):
             shutil.copy(Path(sdfg.build_folder) / "build" / libname, daisycache)
         except:
             traceback.print_exc()
-            exit(1)
+            sys.exit(1)
 
-        exit(0)
+        sys.exit(0)
 
 
 def main():
