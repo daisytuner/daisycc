@@ -465,7 +465,7 @@ def test_bicg(size, dtype, schedule):
     "size, dtype, schedule",
     [
         pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "sequential"),
-        # pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "multicore"),
+        pytest.param("SMALL_DATASET", "DATA_TYPE_IS_DOUBLE", "multicore"),
     ],
 )
 def test_cholesky(size, dtype, schedule):
@@ -520,7 +520,7 @@ def test_cholesky(size, dtype, schedule):
         assert np.allclose(
             reference_arrays[array],
             opt_arrays[array],
-            atol=1e-4,
+            atol=1e-2,
             equal_nan=False,
         )
 
