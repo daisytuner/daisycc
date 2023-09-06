@@ -1,24 +1,19 @@
 import copy
 import dace
 import sympy
-import math
-import warnings
 import islpy as isl
 
 from pathlib import Path
 from typing import Dict
 
-from dace.sdfg.utils import consolidate_edges
 from dace.frontend.python.astutils import negate_expr
-
-from daisytuner.optimization import Normalization
+from dace.sdfg.utils import consolidate_edges
 
 from scop2sdfg.scop.scop import Scop
 from scop2sdfg.scop.value import Value
 from scop2sdfg.scop.computation.access import Access
 from scop2sdfg.scop.computation.indirection import Indirection
 
-from scop2sdfg.codegen.analysis import infer_shape
 from scop2sdfg.codegen.isl import (
     to_sympy,
     sympy_to_pystr,
@@ -361,7 +356,7 @@ class Generator:
         return access_node
 
     @staticmethod
-    def generate(scop: Scop, optimize: bool = False) -> dace.SDFG:
+    def generate(scop: Scop) -> dace.SDFG:
         daisycache = Path() / ".daisycache"
 
         sdfg = dace.SDFG(Generator._sdfg_name(scop.name, scop.source))
@@ -386,41 +381,10 @@ class Generator:
 
         dace.propagate_memlets_sdfg(sdfg)
         consolidate_edges(sdfg)
-
-        Normalization.apply(sdfg)
-        if not Normalization.is_normalized(sdfg):
-            warnings.warn(
-                "Normalization did not succeed. This might result in sub-optimal performance."
-            )
-
-        # Shape inference
-        shapes = infer_shape(scop, sdfg)
-        symbol_mapping = {}
-        for name, memref in scop._memrefs.items():
-            if memref.kind != "array":
-                continue
-
-            for i, val in enumerate(memref.shape):
-                if str(val) in sdfg.free_symbols:
-                    dim = shapes[name][i][1]
-                    if dim == -math.inf:
-                        if i == 0:
-                            dim = 1
-                        else:
-                            continue
-
-                    symbol_mapping[str(val)] = dim
-
-        sdfg.specialize(symbol_mapping)
-        sdfg.simplify()
-
-        # Validation
-        Generator._validate(sdfg, scop)
-
         return sdfg
 
     @staticmethod
-    def _validate(sdfg: dace.SDFG, scop: Scop) -> bool:
+    def validate(sdfg: dace.SDFG, scop: Scop) -> bool:
         arguments = []
         for name, memref in scop._memrefs.items():
             if memref.kind != "array":

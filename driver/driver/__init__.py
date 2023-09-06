@@ -109,6 +109,7 @@ def _compile(compiler, args, output_file, cache_folder, plugin_path):
             "--passes=Daisy",
             f"--daisy-schedule={args.fschedule}",
             f"--daisy-transfer-tune={args.ftransfer_tune}",
+            f"--daisy-dump-raw-maps={args.fdump_raw_maps}",
         ]
         polly = [
             "-polly-process-unprofitable",
@@ -235,6 +236,7 @@ def main():
 
     # Scheduling options
     parser.add_argument("-ftransfer-tune", action="store_true", default=False)
+    parser.add_argument("-fdump-raw-maps", action="store_true", default=False)
     parser.add_argument(
         "-fschedule",
         choices=["sequential", "multicore", "gpu"],

@@ -1,16 +1,23 @@
 import dace
+import copy
+import math
 import shutil
 import fire
 import traceback
 import sys
+import warnings
 
 from pathlib import Path
 
-from daisytuner.optimization import Optimization
+from dace.sdfg.analysis.cutout import SDFGCutout
+
+from daisytuner.optimization import Optimization, Normalization
 from daisytuner.transformations import MapSchedule
+from daisytuner.transformations.helpers import find_all_parent_maps_recursive
 
 from scop2sdfg.scop.scop import Scop
 from scop2sdfg.codegen.generator import Generator
+from scop2sdfg.codegen.analysis import infer_shape
 
 
 class CLI(object):
@@ -22,6 +29,7 @@ class CLI(object):
         transfer_tune: bool = False,
         topk: int = 3,
         use_profiling_features: bool = False,
+        dump_raw_maps: bool = False,
     ):
         assert schedule in ["sequential", "multicore", "gpu"]
 
@@ -31,8 +39,38 @@ class CLI(object):
         try:
             scop = Scop.from_json(source_path.name, scop)
             scop.validate()
-
             sdfg = Generator.generate(scop)
+            sdfg.openmp_sections = False
+
+            # Normalization
+            Normalization.apply(sdfg)
+            if not Normalization.is_normalized(sdfg):
+                warnings.warn(
+                    "Normalization did not succeed. This might result in sub-optimal performance."
+                )
+
+            # Shape inference
+            shapes = infer_shape(scop, sdfg)
+            symbol_mapping = {}
+            for name, memref in scop._memrefs.items():
+                if memref.kind != "array":
+                    continue
+
+                for i, val in enumerate(memref.shape):
+                    if str(val) in sdfg.free_symbols:
+                        dim = shapes[name][i][1]
+                        if dim == -math.inf:
+                            if i == 0:
+                                dim = 1
+                            else:
+                                continue
+
+                        symbol_mapping[str(val)] = dim
+
+            sdfg.specialize(symbol_mapping)
+            sdfg.simplify()
+
+            Generator.validate(sdfg, scop)
         except:
             traceback.print_exc()
             sys.exit(1)
@@ -54,11 +92,43 @@ class CLI(object):
                     break
 
         if not has_loop:
-            print("Prune SDFG", flush=True)
             sys.exit(1)
 
-        # Disable OpenMP sections
-        sdfg.openmp_sections = False
+        # Dump maps for tuning purposes
+        dump_raw_maps_path = None
+        if dump_raw_maps:
+            dump_raw_maps_path = daisycache / "raw_maps"
+            dump_raw_maps_path.mkdir(parents=True, exist_ok=True)
+
+            for nsdfg in sdfg.all_sdfgs_recursive():
+                for state in nsdfg.states():
+                    for node in state.nodes():
+                        if not isinstance(node, dace.nodes.MapEntry):
+                            continue
+
+                        if find_all_parent_maps_recursive(state, node):
+                            continue
+
+                        map_exit = state.exit_node(node)
+                        subgraph_nodes = set(state.all_nodes_between(node, map_exit))
+                        subgraph_nodes.add(node)
+                        subgraph_nodes.add(map_exit)
+
+                        for edge in state.in_edges(node):
+                            subgraph_nodes.add(edge.src)
+                        for edge in state.out_edges(map_exit):
+                            subgraph_nodes.add(edge.dst)
+
+                        subgraph_nodes = list(subgraph_nodes)
+                        cutout = SDFGCutout.singlestate_cutout(
+                            state,
+                            *subgraph_nodes,
+                            symbols_map=copy.copy(sdfg.constants),
+                        )
+                        cutout.name = "cutout_" + str(cutout.hash_sdfg()).replace(
+                            "-", "_"
+                        )
+                        cutout.save(dump_raw_maps_path / f"{cutout.name}.sdfg")
 
         if schedule == "gpu":
             sdfg.apply_gpu_transformations()
@@ -68,7 +138,7 @@ class CLI(object):
             )
         elif schedule == "multicore":
             if transfer_tune:
-                report = Optimization.apply(
+                _ = Optimization.apply(
                     sdfg=sdfg, topK=topk, use_profiling_features=use_profiling_features
                 )
 

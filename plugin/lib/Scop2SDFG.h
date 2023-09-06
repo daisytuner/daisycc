@@ -40,7 +40,15 @@ static llvm::cl::opt<bool, true> XTransferTune(
     "daisy-transfer-tune",
     llvm::cl::location(DaisyTransferTune),
     llvm::cl::desc("Process"),
-    llvm::cl::init(true)
+    llvm::cl::init(false)
+);
+
+static bool DaisyDumpRawMaps;
+static llvm::cl::opt<bool, true> XDumpRawMaps(
+    "daisy-dump-raw-maps",
+    llvm::cl::location(DaisyDumpRawMaps),
+    llvm::cl::desc("Process"),
+    llvm::cl::init(false)
 );
 
 namespace daisy {
@@ -76,6 +84,10 @@ private:
 
         if (DaisyTransferTune) {
             command += " --transfer_tune";
+        }
+
+        if (DaisyDumpRawMaps) {
+            command += " --dump_raw_maps";
         }
 
         return (system(command.c_str()) == 0);
