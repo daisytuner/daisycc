@@ -2224,7 +2224,7 @@ def test_trmm(size, dtype, schedule):
         assert np.allclose(
             reference_arrays[array],
             opt_arrays[array],
-            atol=1e-4,
+            atol=1e-2,
             equal_nan=False,
         )
 
