@@ -128,6 +128,11 @@ class CLI(object):
                         cutout.name = "cutout_" + str(cutout.hash_sdfg()).replace(
                             "-", "_"
                         )
+
+                        for sym, val in sdfg.constants.items():
+                            if sym in cutout.free_symbols:
+                                cutout.specialize({sym: val})
+
                         cutout.save(dump_raw_maps_path / f"{cutout.name}.sdfg")
 
         if schedule == "gpu":
