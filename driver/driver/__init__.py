@@ -77,6 +77,13 @@ def _compile(compiler, args, output_file, cache_folder, plugin_path):
         llvm_base_command.append("-v")
     if args.w:
         llvm_base_command.append("-w")
+    if args.write_dependencies:
+        llvm_base_command.append("-MD")
+    if args.MF is not None:
+        llvm_base_command.append("-MF" + args.MF)
+    if args.MT is not None:
+        llvm_base_command.append("-MT" + args.MT)
+
     compile_options = [
         "-fno-vectorize",
         "-fno-slp-vectorize",
@@ -139,7 +146,7 @@ def _compile(compiler, args, output_file, cache_folder, plugin_path):
 
     # Assemble LLVM files
     llc_command = ["llc-16", "-filetype=obj", opt_level]
-    if args.fPIE:
+    if args.fPIE or args.fPIC:
         llc_command.append("-relocation-model=pic")
 
     llc_command += [str(cache_folder / f"{output_file.stem}.ll")]
@@ -214,7 +221,18 @@ def main():
     # C++ standard
     parser.add_argument(
         "-std",
-        choices=["c++98", "c++11", "c++14", "c++17", "C89", "C99", "c11", "c17", "C23"],
+        choices=[
+            "c++98",
+            "c++11",
+            "c++14",
+            "c++17",
+            "C89",
+            "C99",
+            "c11",
+            "c17",
+            "C23",
+            "gnu11",
+        ],
     )
     parser.add_argument("-stdlib", choices=["libc++", "libstdc++", "platform"])
 
@@ -233,6 +251,7 @@ def main():
     parser.add_argument("-fno-unroll-loops", action="store_true", default=False)
     parser.add_argument("-fopenmp", action="store_true", default=False)
     parser.add_argument("-fPIE", action="store_true", default=True)
+    parser.add_argument("-fPIC", action="store_true", default=True)
 
     # Scheduling options
     parser.add_argument("-ftransfer-tune", action="store_true", default=False)
@@ -243,6 +262,13 @@ def main():
         default="sequential",
         help="",
     )
+
+    # Dependency files
+    parser.add_argument(
+        "-MD", "--write-dependencies", action="store_true", default=False
+    )
+    parser.add_argument("-MF")
+    parser.add_argument("-MT")
 
     # Start of Program
 
