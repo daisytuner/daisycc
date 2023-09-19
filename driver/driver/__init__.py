@@ -93,6 +93,10 @@ def _compile(compiler, args, output_file, cache_folder, plugin_path):
         compile_options.append("-ffast-math")
     if args.fno_unroll_loops:
         compile_options.append("-fno-unroll-loops")
+    if args.fopenmp:
+        compile_options.append("-fopenmp")
+    if args.pthread:
+        compile_options.append("-pthread")
     macros = ["-D" + arg for arg in args.D] + ["-U" + arg for arg in args.U]
     wanings = ["-W" + arg for arg in args.W]
     includes = ["-isystem" + arg for arg in args.isystem] + [
@@ -162,6 +166,10 @@ def _build(compiler, args, input_files, output_file, cache_folder):
         build_command.append("--target=" + args.target)
     if args.sysroot is not None:
         build_command.append("--sysroot=" + args.sysroot)
+    if args.fopenmp:
+        build_command.append("-fopenmp")
+    if args.pthread:
+        build_command.append("-pthread")
     build_command += ["-o", output_file]
 
     build_command += ["-L" + arg for arg in args.L]
@@ -269,6 +277,9 @@ def main():
     )
     parser.add_argument("-MF")
     parser.add_argument("-MT")
+
+    # Others
+    parser.add_argument("-pthread", action="store_true", default=False)
 
     # Start of Program
 
