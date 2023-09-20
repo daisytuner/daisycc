@@ -31,8 +31,9 @@ def value_propagation(scop):
                         propagated = True
                         break
 
-            if not propagated:
-                new_args.add(arg)
+            # Speculative: Irrelevant instruction
+            # if not propagated:
+            #     new_args.add(arg)
 
         comp._arguments = new_args
 
@@ -63,7 +64,8 @@ def value_propagation(scop):
                             propagated = True
                             break
 
-                if not propagated:
-                    new_args.add(arg)
+                # Speculative: Irrelevant instruction
+                # if not propagated:
+                #     new_args.add(arg)
 
             access._arguments = new_args
