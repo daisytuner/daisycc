@@ -223,14 +223,8 @@ class Computation(Value):
     def from_str(instruction: str) -> Computation:
         try:
             reference, instruction = instruction.strip().split("=")
-            # The following should all be handled by Scop separately
-            assert "load" not in instruction
-            assert "store" not in instruction
-            assert "phi" not in instruction
-            assert "getelementptr" not in instruction
+            reference = reference.strip()
+            instruction = instruction.strip()
+            return Computation(reference=reference, code=instruction)
         except:
-            raise Computation.InvalidComputation
-
-        reference = reference.strip()
-        instruction = instruction.strip()
-        return Computation(reference=reference, code=instruction)
+            return None

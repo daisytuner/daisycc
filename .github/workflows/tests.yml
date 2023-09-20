@@ -133,6 +133,7 @@ jobs:
       shell: bash -l {0}
       run: |
         conda install -c intel mkl-devel
+        conda install -c conda-forge isl nlohmann_json
     - name: Install scop2sdfg
       shell: bash -l {0}
       run: |      

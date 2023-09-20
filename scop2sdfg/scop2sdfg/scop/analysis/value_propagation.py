@@ -1,4 +1,3 @@
-from scop2sdfg.scop.undefined_value import UndefinedValue
 from scop2sdfg.scop.symbols.constant import Constant
 
 
@@ -9,25 +8,32 @@ def value_propagation(scop):
     for _, comp in scop._computations.items():
         new_args = set()
         for arg in comp.arguments():
+            propagated = False
             if isinstance(arg, Constant):
                 new_args.add(arg)
-                continue
-
-            ref = arg.reference
-            if ref in scop._parameters:
-                new_args.add(scop._parameters[ref])
-            elif ref in scop._computations:
-                new_args.add(scop._computations[ref])
+                propagated = True
+            elif arg.reference in scop._parameters:
+                new_args.add(scop._parameters[arg.reference])
+                propagated = True
+            elif arg.reference in scop._computations:
+                new_args.add(scop._computations[arg.reference])
+                propagated = True
             else:
                 for _, mems in scop._memory_accesses.items():
-                    if ref in mems and mems[ref].kind == "read":
-                        new_args.add(mems[ref])
+                    if arg.reference in mems and mems[arg.reference].kind == "read":
+                        new_args.add(mems[arg.reference])
+                        propagated = True
                         break
 
                 for _, ls in scop._loops.items():
-                    if ref in ls:
-                        new_args.add(ls[ref])
+                    if arg.reference in ls:
+                        new_args.add(ls[arg.reference])
+                        propagated = True
                         break
+
+            # Speculative: Irrelevant instruction
+            # if not propagated:
+            #     new_args.add(arg)
 
         comp._arguments = new_args
 
@@ -35,24 +41,31 @@ def value_propagation(scop):
         for _, access in scop._memory_accesses[statement].items():
             new_args = set()
             for arg in access.arguments():
+                propagated = False
                 if isinstance(arg, Constant):
                     new_args.add(arg)
-                    continue
-
-                ref = arg.reference
-                if ref in scop._parameters:
-                    new_args.add(scop._parameters[ref])
-                elif ref in scop._computations:
-                    new_args.add(scop._computations[ref])
+                    propagated = True
+                elif arg.reference in scop._parameters:
+                    new_args.add(scop._parameters[arg.reference])
+                    propagated = True
+                elif arg.reference in scop._computations:
+                    new_args.add(scop._computations[arg.reference])
+                    propagated = True
                 else:
                     for _, mems in scop._memory_accesses.items():
-                        if ref in mems and mems[ref].kind == "read":
-                            new_args.add(mems[ref])
+                        if arg.reference in mems and mems[arg.reference].kind == "read":
+                            new_args.add(mems[arg.reference])
+                            propagated = True
                             break
 
                     for _, ls in scop._loops.items():
-                        if ref in ls:
-                            new_args.add(ls[ref])
+                        if arg.reference in ls:
+                            new_args.add(ls[arg.reference])
+                            propagated = True
                             break
+
+                # Speculative: Irrelevant instruction
+                # if not propagated:
+                #     new_args.add(arg)
 
             access._arguments = new_args

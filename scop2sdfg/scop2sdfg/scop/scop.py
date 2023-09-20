@@ -222,11 +222,11 @@ class Scop:
                 getelementptrs[ref] = inst
                 continue
 
-            try:
-                computation = Computation.from_str(instruction)
-                scop._computations[computation.reference] = computation
-            except Computation.InvalidComputation:
+            computation = Computation.from_str(instruction)
+            if computation is None:
                 continue
+
+            scop._computations[computation.reference] = computation
 
         value_propagation(scop)
         undefined_access_to_indirection(scop, getelementptrs)
