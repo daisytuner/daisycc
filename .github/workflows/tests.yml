@@ -28,6 +28,11 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
         auto-update-conda: true
+    - name: Install conda packages
+      shell: bash -l {0}
+      run: |
+        conda install -c conda-forge isl=0.22.1 nlohmann_json
+        conda install -c anaconda mkl mkl-include
     - name: Install Package
       shell: bash -l {0}
       run: |      
@@ -38,7 +43,7 @@ jobs:
       run: |
         black --check --verbose scop2sdfg/
         black --check --verbose tests/
-    - name: Unit tests with pytest
+    - name: Unit tests
       shell: bash -l {0}
       run: |
         pytest --cov=scop2sdfg --cov-report=xml tests/unit
@@ -70,7 +75,7 @@ jobs:
         cmake --build .
         sudo cmake --install .
         cd ../
-    - name: Test Plugin Load
+    - name: Test
       shell: bash -l {0}
       run: |      
         opt-16 --load-pass-plugin=build/lib/libDaisyLLVMPlugin.so --help | grep daisy
@@ -102,6 +107,10 @@ jobs:
       shell: bash -l {0}
       run: |
         black --check --verbose driver/
+    - name: Test
+      shell: bash -l {0}
+      run: |      
+        daisycc --help
 
   integration-tests:
     needs: driver
@@ -132,8 +141,8 @@ jobs:
     - name: Install conda packages
       shell: bash -l {0}
       run: |
-        conda install -c intel mkl-devel
-        conda install -c conda-forge isl nlohmann_json
+        conda install -c conda-forge isl=0.22.1 nlohmann_json
+        conda install -c anaconda mkl mkl-include
     - name: Install scop2sdfg
       shell: bash -l {0}
       run: |      
