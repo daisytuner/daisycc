@@ -15,7 +15,7 @@ from daisytuner.optimization import Optimization, Normalization
 from daisytuner.transformations import MapSchedule
 from daisytuner.transformations.helpers import find_all_parent_maps_recursive
 
-from scop2sdfg.scop.scop import Scop
+from scop2sdfg.ir.scop import Scop
 from scop2sdfg.codegen.generator import Generator
 from scop2sdfg.codegen.analysis import infer_shape
 

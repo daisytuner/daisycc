@@ -9,10 +9,10 @@ from typing import Dict
 from dace.frontend.python.astutils import negate_expr
 from dace.sdfg.utils import consolidate_edges
 
-from scop2sdfg.scop.scop import Scop
-from scop2sdfg.scop.value import Value
-from scop2sdfg.scop.computation.access import Access
-from scop2sdfg.scop.computation.indirection import Indirection
+from scop2sdfg.ir.scop import Scop
+from scop2sdfg.ir.value import Value
+from scop2sdfg.ir.computation.access import Access
+from scop2sdfg.ir.computation.indirection import Indirection
 
 from scop2sdfg.codegen.isl import (
     to_sympy,
