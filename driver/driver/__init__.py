@@ -124,6 +124,11 @@ def _compile(compiler, args, output_file, cache_folder, plugin_path):
         ]
         polly = [
             "-polly-process-unprofitable",
+            "-polly-allow-nonaffine",
+            "-polly-allow-nonaffine-branches",
+            "-polly-allow-nonaffine-loops",
+            "-polly-dependences-computeout=0",
+            "-polly-analysis-computeout=0",
         ]
         files = [
             llvm_file,
